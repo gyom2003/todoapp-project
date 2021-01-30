@@ -1,0 +1,34 @@
+ dismissal: SlidableDismissal(
+        child: const SlidableDrawerDismissal(),
+        onDismissed: (actionType) { 
+      // showSnackBar(
+      //   actionType == SlideActionType.primary ? 
+      //     'Dismiss Archive' : 'Dismiss delete'
+      //   );
+      },
+      onWillDismiss: (actionType) {
+        return showDialog<bool>(
+          context: context, 
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                actionType == SlideActionType.primary ? 
+                  'Archive' : 'Delete'
+              ),
+              content: Text("Confirmer l'action"),
+              actions: <Widget> [
+                FlatButton(
+                  child: Text('Cancel'),
+                  onPressed: () => Navigator.of(context).pop(false)
+                ),
+                FlatButton(
+                  child: Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(true)
+                ), 
+              ],
+            );
+          }
+        ); 
+      },
+        
+      ),

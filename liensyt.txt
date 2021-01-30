@@ -1,0 +1,21 @@
+
+      
+liens
+https://www.youtube.com/watch?v=GeeqfsgBx7U&list=PL_Wj0DgxTlJeLFYfRBfpFveEd9cQfIpDx&index=2
+https://www.youtube.com/watch?v=6WM3uUX640Y
+https://www.youtube.com/watch?v=9D1VX6uGylU
+https://www.youtube.com/watch?v=CXyylpd5wqU
+
+https://www.youtube.com/watch?v=E9gyL-UcQco&t=1065s
+
+
+https://www.youtube.com/watch?v=ig9EOn17vFM
+
+//voire données sqlite, les retrouver pafe des paramètres
+//ajout storage firebase
+home passer toutes les données pour les représenter dans un listView.builder() 
+ajout url image sqlite db
+
+
+//Dialogflow
+
