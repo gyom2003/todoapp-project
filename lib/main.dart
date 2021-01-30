@@ -210,7 +210,7 @@ class _HomePageTodoAppState extends State<HomePageTodoApp> {
                                   ),
                                   borderRadius: BorderRadius.all(Radius.circular(30)), 
                                 ),
-                                  child: Text("Listes des notesss",  
+                                  child: Text("Listes des notes",  
                                     style: GoogleFonts.openSans(
                                     textStyle: TextStyle(
                                     color: Colors.black87, fontSize: 20, fontWeight: FontWeight.w600, 
