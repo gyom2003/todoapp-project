@@ -23,7 +23,7 @@ class _SlidableWidgetState extends State<SlidableWidget>  with SingleTickerProvi
    //animation variables
     AnimationController likeController; 
     bool isFinished;
-    Animation _colorTweenAnimationController;
+    Animation colorTweenAnimationController;
 
      @override 
     void initState() {
@@ -34,16 +34,14 @@ class _SlidableWidgetState extends State<SlidableWidget>  with SingleTickerProvi
           milliseconds: 200, 
         ), 
       ); 
-      _colorTweenAnimationController = ColorTween(
+      colorTweenAnimationController = ColorTween(
         begin: Colors.grey[400], 
         end: Colors.red[600],
-        //doit se baser dur un AnimationController 
       ).animate(likeController); 
 
       likeController.forward(); 
        likeController.addStatusListener(
       (status) {
-      //condition de status definit bool isFinished
       if (status == AnimationStatus.completed) {
         setState(() {
           isFinished = true; 
@@ -81,11 +79,11 @@ class _SlidableWidgetState extends State<SlidableWidget>  with SingleTickerProvi
               return  IconButton(
               icon: Icon(
                 Icons.favorite, 
+                color: colorTweenAnimationController.value,
               ),
-              //onTap: async {} ? 
               onPressed: () async {
-                widget.onDismissedactions(Slidableactions.liker);
-                isFinished ? likeController.reverse() : likeController.forward();  
+                isFinished ? likeController.reverse() : likeController.forward();
+                widget.onDismissedactions(Slidableactions.liker);  
               }
             );
             }

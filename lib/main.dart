@@ -11,7 +11,8 @@ import 'package:todoapp/services/notes_services_crud.dart';
 import 'package:todoapp/SliverBody.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:share/share.dart';
-//import 'package:get_it/get_it.dart';
+import 'package:todoapp/services/DBreference.dart'; 
+
 
 
 void main() async {
@@ -37,7 +38,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(     
         primarySwatch: Colors.blue,
       ),
-     home: HomePageTodoApp(),
+      //Changed Notifier
+     home: HomePageTodoApp()
+       
     );
   }
 }   
@@ -50,7 +53,7 @@ class HomePageTodoApp extends StatefulWidget {
 
 class _HomePageTodoAppState extends State<HomePageTodoApp> {
   GlobalKey <ScaffoldState> scaffoldkey = GlobalKey<ScaffoldState>(); 
- 
+  final dbInstance = Databasehelper.instance;
     
   @override
   void initState() { 
@@ -97,7 +100,8 @@ class _HomePageTodoAppState extends State<HomePageTodoApp> {
 
       case Slidableactions.supprimer: 
       showSnackBar("Supprimer");
-        setState(() {
+      //supprimer de db
+        setState(() async {
           listPush.removeAt(index);
         });
         break;
@@ -196,7 +200,7 @@ class _HomePageTodoAppState extends State<HomePageTodoApp> {
                                 top: 150, 
                                 bottom: 0,
                                 left: 130,
-                                right: 0,  
+                                right: 0,    
                               ),
                               child: Container( 
                                 decoration: BoxDecoration(

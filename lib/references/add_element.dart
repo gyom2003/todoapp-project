@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:todoapp/main.dart';
 import 'package:todoapp/references/list-reference.dart';
 import 'package:todoapp/services/notes_services_crud.dart';
+import 'package:todoapp/services/DBreference.dart'; 
 
 
 class SecondPage extends StatefulWidget {
@@ -17,47 +18,70 @@ class SecondPage extends StatefulWidget {
 }
 
 class _SecondPageState extends State<SecondPage> {
-  String noteIDText = "";
-  String noteTitleText = ""; 
+
+  String errtext = ""; 
+  String descEdited = ""; 
+  String titleEdited = ""; 
+
+
+  TextEditingController titleController; 
+  TextEditingController descController;
+
   final formKeyOne = GlobalKey<FormState>();
-  final formKeyTwo = GlobalKey<FormState>();
-  void initState() {
-    noteIDText = ModelPreferences.getTheDescription(); 
-    noteTitleText = ModelPreferences.getTheTitle(); 
-    super.initState();
-  }
+  final formKeyTwo = GlobalKey<FormState>(); 
+
+  final dbInstance = Databasehelper.instance; 
+
   bool get trueEditing => widget.noteID != null; 
+  //bool validateController = true; 
 
   void addDatatoList(int index) async {
-      await ModelPreferences.setTheTitle(noteTitleText); 
-      await ModelPreferences.setTheDescription(noteIDText); 
-      print(noteIDText);
-      print(noteTitleText);
-      try {
-        listPush.add(
-          ListForReference(
-            noteTitle: noteTitleText,
-            noteID: noteIDText,
-            createEditingTime: DateTime.now(),
-            lastEditingTime: DateTime.now(),
-            noteCirlceAvatar: listPush[index].noteCirlceAvatar,  
-            //changer noteCirlceAvatar
-          )
-        );
-      } catch (e) {
-        print(e.toString()); 
-      }
-    
+
+    Map<String, dynamic> row = {
+      Databasehelper.columnTitle : titleEdited, 
+      Databasehelper.columnDesc : descEdited
+    }; 
+    final id = await dbInstance.insert(row); 
+    final query = await dbInstance.queryall(); 
+    print(id); 
+    print(row.values);
+    print(query); 
+    titleEdited = ""; 
+    descEdited = ""; 
+    listPush.add(
+      ListForReference(
+        noteTitle: row[0].toString(), 
+        noteID: row[1].toString(),
+        createEditingTime: DateTime.now(),
+        lastEditingTime: DateTime.now(),
+        noteCirlceAvatar: listPush[index].noteCirlceAvatar,  
+      
+      )
+    );
+  }
+
+  void completetheDelete() async {
+    //nouveau button
+     Map<String, dynamic> row = {
+      Databasehelper.columnTitle : titleEdited, 
+      Databasehelper.columnDesc : descEdited
+    };
+    await dbInstance.deletedata(row[0]); 
+    await dbInstance.deletedata(row[1]);
   }
 
   void updateDatatoList(int index) async {  
+    Map<String, dynamic> row = {
+      Databasehelper.columnTitle : titleEdited, 
+      Databasehelper.columnDesc : descEdited
+    }; 
     try {
        listPush.forEach((element) {
         element.createEditingTime = DateTime.now();
         element.lastEditingTime =  DateTime.now();
         element.noteCirlceAvatar = listPush[index].noteCirlceAvatar;
-        element.noteID = noteIDText;
-        element.noteTitle = noteTitleText;  
+        element.noteID = row[1].toString();
+        element.noteTitle = row[0].toString();  
       });
     } catch(e) {
       print(e.toString());
@@ -126,14 +150,11 @@ class _SecondPageState extends State<SecondPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  key: formKeyOne, 
-                  initialValue: noteTitleText,
-                  onChanged: (noteTitleText) {
-                    setState(() {
-                      this.noteTitleText = noteTitleText; 
-                    }); 
+                  controller: titleController,
+                  onChanged: (_valuetitle) {
+                    titleEdited = _valuetitle; 
                   },
-                  //controller: titrecontroller,
+                  //key: formKeyOne, 
                   decoration: InputDecoration(
                     hintText: "title de la note", 
                     hintStyle: TextStyle(
@@ -159,14 +180,12 @@ class _SecondPageState extends State<SecondPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  key: formKeyTwo,
-                   initialValue: noteIDText,
-                  onChanged: (noteIDText) {
-                    setState(() {
-                      this.noteIDText = noteIDText; 
-                    }); 
+                  controller: descController, 
+                  onChanged: (_valuedesc) {
+                    descEdited = _valuedesc; 
                   },
-                  decoration: InputDecoration(
+                  //key: formKeyTwo,
+                  decoration: InputDecoration( 
                     hintText: "contenue de la note",
                     hintStyle: TextStyle(
                       color: Colors.black54, 
@@ -210,15 +229,44 @@ class _SecondPageState extends State<SecondPage> {
               onPressed: () {
                 Navigator.of(context).pop();
                 if (trueEditing) {
-                  //updtate note
-                  updateDatatoList(index); 
+                 
+                  updateDatatoList(index);
+                   
                 } else {
+                  
                   addDatatoList(index); 
+                  
                 }
               }
             )
           ),
-        )
+        ), 
+        Padding(
+          padding: EdgeInsets.only(
+            top: 425, 
+            left: 85, 
+          ), 
+          child: SizedBox(
+            width: _width * 0.5,
+            height: 45, 
+            child: RaisedButton(
+              clipBehavior: Clip.none,
+              child: Text("Supprimer la dernière requete ⚡", 
+              style: GoogleFonts.openSans(
+                textStyle: TextStyle(
+                  color: Colors.white,
+                ),
+              )),
+              color: Color(0xFF2980B9), //oxFF2980B9 //oxff40A497
+              onPressed: () {
+                completetheDelete(); 
+                Navigator.of(context).pop();
+               
+              }
+            )
+          ),
+        ), 
+
 
         ], 
       )
