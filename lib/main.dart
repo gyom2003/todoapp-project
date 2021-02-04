@@ -266,15 +266,16 @@ class _HomePageTodoAppState extends State<HomePageTodoApp> {
   }
    ListTile listTileChild(BuildContext context, int index) {
     return ListTile(
-        title: Text(listPush[index].noteTitle, 
+        title: Text(listPush.isEmpty ? "pas de titre" : listPush[index].noteTitle, 
         style: TextStyle(color: Theme.of(context).primaryColor)), 
         isThreeLine: true,
-        leading: CircleAvatar(
-          //text cirle avatar
-          child: Text(listPush[index].noteCirlceAvatar)
-        ),  
+        //ou CircleAvatar
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: listPush[index].noteCirlceAvatar, 
+        ),   
         subtitle: Text(
-        "dernière fois édité: ${listPush[index].lastEditingTime.day}/${listPush[index].lastEditingTime.month}/${listPush[index].lastEditingTime.year}, body: ${listPush[index].noteID}",
+        "dernière fois édité: ${listPush[index].lastEditingTime.day}/${listPush[index].lastEditingTime.month}/${listPush[index].lastEditingTime.year}, body: ${listPush.isEmpty ? "pas de description" : listPush[index].noteID}",
         style: TextStyle(),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
